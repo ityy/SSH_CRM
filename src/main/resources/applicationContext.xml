@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+							http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+							http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+							http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd ">
+    <!--读取数据库配置信息-->
+    <context:property-placeholder location="classpath:db.properties"/>
+    <!--根据数据库配置信息 注入到C3P0连接池-->
+    <bean name="c3p0DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+        <property name="driverClass" value="${jdbc.driverClass}"></property>
+        <property name="user" value="${jdbc.user}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!--核心事务管理器-->
+    <bean name="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <!--开启注解事务-->
+    <!--<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>-->
+
+
+    <!-- ========================================================================================= -->
+    <!--AOP进行事务处理，由于上边使用了注解来配置，以下xml方式配置的代码已注释掉。-->
+    <!-- 配置通知 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager" >
+        <tx:attributes>
+            <tx:method name="save*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" />
+            <tx:method name="persist*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" />
+            <tx:method name="update*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" />
+            <tx:method name="modify*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" />
+            <tx:method name="delete*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" />
+            <tx:method name="remove*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" />
+            <tx:method name="get*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="true" />
+            <tx:method name="find*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="true" />
+            <tx:method name="*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" />
+        </tx:attributes>
+    </tx:advice>
+    <!-- 配置将通知织入目标对象
+    配置切点
+    配置切面 -->
+    <aop:config>
+        <aop:pointcut expression="execution(* cn.yang.service.impl.*ServiceImpl.*(..))" id="txPc"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPc" />
+    </aop:config>
+    <!-- ========================================================================================= -->
+
+    <!-- 将hibernate的SessionFactory配置到spring容器中 -->
+    <!--使用内部配置的方法-->
+    <!--创建sessionFactory 并注入属性、配置-->
+    <bean name="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <!--将C3P0连接池注入-->
+        <property name="dataSource" ref="c3p0DataSource"></property>
+        <!--配置hibernate的基本配置-->
+        <property name="hibernateProperties">
+            <props>
+                <!--  必选配置 由于额外配置了C3P0来提供，这里注释掉-->
+                <!--
+                    <prop key="hibernate.connection.driver_class" >com.mysql.jdbc.Driver</prop>
+                    <prop key="hibernate.connection.url" >jdbc:mysql:///crm_32</prop>
+                    <prop key="hibernate.connection.username" >root</prop>
+                    <prop key="hibernate.connection.password" >1234</prop>
+                -->
+
+                <!--  可选配置 -->
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+        <!--引入orm映射的配置信息 这里给出目录而不必每个映射都给出 spring会自动加载目录内的orm映射-->
+        <property name="mappingDirectoryLocations" value="classpath:cn/yang/domain"></property>
+    </bean>
+    <!-- ========================================================================================= -->
+    <!-- 使用外部的hibernate.cfg.xml配置信息 由于上面已使用了内部配置的方式，这里注释掉-->
+    <!--
+        <bean name="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" >
+        <property name="configLocation" value="classpath:hibernate.cfg.xml" ></property>
+        </bean>
+    -->
+    <!-- ========================================================================================= -->
+
+
+    <!-- 创建Action 并注入属性 注意:Action对象作用范围一定是多例的.这样才符合struts2架构-->
+    <!--<bean name="userAction" class="cn.yang.web.action.UserAction" scope="prototype">-->
+        <!--<property name="userService" ref="userService"></property>-->
+    <!--</bean>-->
+    <bean name="customerAction" class="cn.yang.web.action.CustomerAction" scope="prototype">
+        <property name="customerService" ref="customerService"></property>
+    </bean>
+    <bean name="baseDictAction" class="cn.yang.web.action.BaseDictAction" scope="prototype">
+        <property name="baseDictService" ref="baseDictService"></property>
+    </bean>
+    <bean name="linkManAction" class="cn.yang.web.action.LinkManAction" scope="prototype">
+        <property name="linkManService" ref="linkManService"/>
+    </bean>
+    <bean name="userAction" class="cn.yang.web.action.UserAction" scope="prototype">
+        <property name="userService" ref="userService"/>
+    </bean>
+    <bean name="saleVisit" class="cn.yang.web.action.SaleVisitAction" scope="prototype">
+        <property name="saleVisitService" ref="saleVisitService"/>
+    </bean>
+    <bean name="indexAction" class="cn.yang.web.action.IndexAction" scope="prototype">
+    </bean>
+
+
+    <!--创建Service 并注入属性-->
+    <bean name="customerService" class="cn.yang.service.impl.CustomerServiceImpl">
+        <property name="customerDao" ref="customerDao"></property>
+    </bean>
+    <bean name="baseDictService" class="cn.yang.service.impl.BaseDictServiceImpl">
+        <property name="baseDictDao" ref="baseDictDao"></property>
+    </bean>
+    <bean name="linkManService" class="cn.yang.service.impl.LinkManServiceImpl">
+        <property name="linkManDao" ref="linkManDao"></property>
+    </bean>
+    <bean name="userService" class="cn.yang.service.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao"></property>
+    </bean>
+    <bean name="saleVisitService" class="cn.yang.service.impl.SaleVisitServiceImpl">
+        <property name="saleVisitDao" ref="saleVisitDao"></property>
+    </bean>
+
+
+    <!--创建Dao 并注入属性-->
+    <bean name="customerDao" class="cn.yang.dao.impl.CustomerDaoImpl" >
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean name="baseDictDao" class="cn.yang.dao.impl.BaseDictDaoImpl" >
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean name="linkManDao" class="cn.yang.dao.impl.LinkManDaoImpl" >
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean name="userDao" class="cn.yang.dao.impl.UserDaoImpl" >
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean name="saleVisitDao" class="cn.yang.dao.impl.SaleVisitDaoImpl" >
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+</beans>

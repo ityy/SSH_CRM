@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <!--交给spring管理Action-->
+    <constant name="struts.objectFactory" value="spring"></constant>
+
+    <package name="crm" namespace="/" extends="struts-default">
+        <!--拦截器配置要放在前边 最好按dtd的顺序来配置-->
+        <!--注册拦截器-->
+        <!--配置拦截器栈-->
+        <interceptors>
+            <interceptor name="privilegeInterceptor" class="cn.yang.web.interceptor.PrivilegeInterceptor"></interceptor>
+            <interceptor-stack name="myIS">
+                <interceptor-ref name="privilegeInterceptor">
+                    <!--ex是排除的方法 in是包含的方法-->
+                    <param name="excludeMethods">login,regist</param>
+                </interceptor-ref>
+
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <!--指定默认拦截器-->
+        <default-interceptor-ref name="myIS"></default-interceptor-ref>
+
+        <!-- 全局结果集配置 -->
+        <global-results>
+            <result name="toLogin" type="redirect" >/login.jsp</result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
+        </global-exception-mappings>
+
+
+
+
+        <!--由spring管理Action，所以class填spring的bean的name-->
+        <action name="CustomerAction_*" class="customerAction" method="{1}">
+            <!--当返回list时跳转到list页面-->
+            <result name="list">/jsp/customer/list.jsp</result>
+            <result name="toEdit" type="dispatcher">/jsp/customer/add.jsp</result>
+            <result name="industryCount" type="dispatcher">/jsp/customer/industryCount.jsp</result>
+            <result name="toList" type="redirectAction">
+                <param name="namespace">/</param>
+                <param name="actionName">CustomerAction_list</param>
+            </result>
+        </action>
+
+        <action name="LinkManAction_*" class="linkManAction" method="{1}">
+            <result name="list">/jsp/linkman/list.jsp</result>
+            <result name="toEdit" type="dispatcher">/jsp/linkman/add.jsp</result>
+            <result name="toList" type="redirectAction">
+                <param name="namespace">/</param>
+                <param name="actionName">LinkManAction_list</param>
+            </result>
+        </action>
+
+        <action name="UserAction_*" class="userAction" method="{1}">
+            <result name="list">/jsp/linkman/list.jsp</result>
+            <result name="toHome" type="dispatcher">/toIndex.htm</result>
+            <result name="toRegist" type="dispatcher">/regist.jsp</result>
+            <result name="toLogin" type="dispatcher">/login.jsp</result>
+            <result name="error" >/login.jsp</result>
+        </action>
+
+        <action name="SaleVisitAction_*" class="saleVisit" method="{1}">
+            <result name="list">/jsp/salevisit/list.jsp</result>
+            <result name="toList" type="redirectAction">SaleVisitAction_list</result>
+            <result name="add" >/jsp/salevisit/add.jsp</result>
+
+        </action>
+
+        <action name="BaseDictAction" class="baseDictAction">
+        </action>
+        <action name="IndexAction" class="indexAction">
+            <result>/toIndex.htm</result>
+        </action>
+
+
+
+
+    </package>
+
+
+</struts>
