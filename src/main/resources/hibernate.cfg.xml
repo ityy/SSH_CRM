@@ -4,6 +4,8 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
+        <!--注意:由于spring使用了内部配置hibernate的模式 此配置文件现已不起作用-->
+
 
         <!--
         #hibernate.dialect org.hibernate.dialect.MySQLDialect
