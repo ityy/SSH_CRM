@@ -75,6 +75,8 @@
 
         <action name="BaseDictAction" class="baseDictAction">
         </action>
+
+
         <action name="IndexAction" class="indexAction">
             <result>/toIndex.htm</result>
         </action>

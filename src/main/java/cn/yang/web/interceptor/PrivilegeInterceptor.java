@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 
 /**
  * 自定义拦截器
+ * 当用户未登陆则拦截所有页面 跳转到登陆页面
  */
 public class PrivilegeInterceptor extends MethodFilterInterceptor {
     @Override

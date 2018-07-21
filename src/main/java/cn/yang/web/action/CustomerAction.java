@@ -12,8 +12,14 @@ import org.hibernate.criterion.Restrictions;
 
 import java.io.File;
 import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+/**
+ * 处理Customer相关的请求的Action
+ */
 public class CustomerAction extends ActionSupport implements ModelDriven<Customer> {
+    private final static Logger logger = LoggerFactory.getLogger(UserAction.class);
+
     //模型驱动 封装数据,Customer中的3个外键对象，如果也有属性过来，struts2会自动创建外键对象并赋值。
     //这里传递来的外键属性是dict_id，这样这3个外键就都有id了，成为游离状态的对象。可以直接save Customer而不用手动维护外键关系了。
     private Customer customer = new Customer();
@@ -54,15 +60,19 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
         this.photo = photo;
     }
 
-
+    /**
+     * 响应客户列表
+     * @return
+     * @throws Exception
+     */
     public String list() throws Exception {
-        System.out.println("CustomerAction:list正在执行");
+        logger.info("CustomerAction:list正在执行");
 
         // 封装离线查询对象
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Customer.class);
 
         /*
-            如果有筛选，则添加筛选条件，否则不添加
+            如果有模糊搜索，则添加搜索条件，否则不添加
             isNotBlank是否非空，此方法排除空格参数
         */
         if (StringUtils.isNotBlank(customer.getCust_name())) {

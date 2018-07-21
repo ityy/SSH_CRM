@@ -33,24 +33,22 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void save(Customer customer) {
         //1 维护多表关系
-            //由于customer的3个外键值已由Action获得，这里不再设置。
+        //由于customer的3个外键值已由Action获得，这里不再设置。
         //2 保存客户
         System.out.println("Service:CustomerServiceImpl:save--正在运行");
         customerDao.save(customer);
-
 
     }
 
     @Override
     public Customer getById(Long cust_id) {
-        return customerDao.getById( cust_id);
+        return customerDao.getById(cust_id);
     }
 
     @Override
     public void saveOrUpdate(Customer customer) {
         customerDao.saveOrUpdate(customer);
     }
-
 
     /*
         --------------------  框架赋值部分  -----------------------------

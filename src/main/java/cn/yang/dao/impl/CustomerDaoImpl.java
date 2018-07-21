@@ -15,7 +15,6 @@ import java.util.List;
 //继承spring提供的Hibernate模板
 public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDao {
 
-
     //独立单元测试 测试数据库读取是否正常 开发时使用
     @Test
     public void getTotalCountTest() {

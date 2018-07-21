@@ -22,6 +22,43 @@
 
     <dependencies>
 
+        <!--引入jstl的依赖  否则jsp中的jstl标签不可用-->
+        <dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>jstl-api</artifactId>
+            <version>1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet.jsp</groupId>
+                    <artifactId>jsp-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jstl-impl</artifactId>
+            <version>1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet.jsp</groupId>
+                    <artifactId>jsp-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet.jsp.jstl</groupId>
+                    <artifactId>jstl-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--引入jstl的依赖 完毕-->
+
         <!--jsp依赖 仅在编译时使用  发布时不包含-->
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
@@ -197,6 +234,10 @@
             <artifactId>commons-beanutils</artifactId>
             <version>1.8.3</version>
         </dependency>
+        <!--框架依赖 完毕-->
+
+
+        <!--因为使用了log4j2  这里的旧依赖注释掉-->
         <!--<dependency>-->
         <!--<groupId>log4j</groupId>-->
         <!--<artifactId>log4j</artifactId>-->
@@ -207,11 +248,15 @@
         <!--<artifactId>commons-logging</artifactId>-->
         <!--<version>1.2</version>-->
         <!--</dependency>-->
+
+
+        <!--数据库连接池-->
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
             <version>0.9.1.2</version>
         </dependency>
+
         <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
@@ -302,7 +347,7 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
-        
+
     </build>
 
 </project>
