@@ -16,6 +16,8 @@
         #hibernate.connection.username gavin
         #hibernate.connection.password
          -->
+
+
         <!-- 数据库驱动 -->
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <!-- 数据库url -->

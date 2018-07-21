@@ -89,11 +89,7 @@
     -->
 
     <!-- 开始创建bean======================================================================== -->
-
-    <!-- 创建Action 并注入属性 注意:Action对象作用范围一定是多例的.这样才符合struts2架构-->
-    <!--<bean name="userAction" class="cn.yang.web.action.UserAction" scope="prototype">-->
-    <!--<property name="userService" ref="userService"></property>-->
-    <!--</bean>-->
+    <!-- 创建Action 并注入属性 注意:Action对象作用范围一定是多例的scope="prototype".这样才符合struts2架构-->
     <bean name="customerAction" class="cn.yang.web.action.CustomerAction" scope="prototype">
         <property name="customerService" ref="customerService"></property>
     </bean>

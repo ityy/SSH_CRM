@@ -10,31 +10,30 @@
 
     <package name="crm" namespace="/" extends="struts-default">
         <!--拦截器配置要放在前边 最好按dtd的顺序来配置-->
-        <!--注册拦截器-->
-        <!--配置拦截器栈-->
         <interceptors>
+            <!--注册拦截器-->
             <interceptor name="privilegeInterceptor" class="cn.yang.web.interceptor.PrivilegeInterceptor"></interceptor>
+            <!--配置拦截器栈-->
             <interceptor-stack name="myIS">
+                <!--自定义的拦截器放前边-->
                 <interceptor-ref name="privilegeInterceptor">
                     <!--ex是排除的方法 in是包含的方法-->
                     <param name="excludeMethods">login,regist</param>
                 </interceptor-ref>
-
+                <!--导入框架自带的拦截器-->
                 <interceptor-ref name="defaultStack"></interceptor-ref>
             </interceptor-stack>
         </interceptors>
-        <!--指定默认拦截器-->
+        <!--指定默认的拦截器栈-->
         <default-interceptor-ref name="myIS"></default-interceptor-ref>
 
         <!-- 全局结果集配置 -->
         <global-results>
-            <result name="toLogin" type="redirect" >/login.jsp</result>
+            <result name="toLogin" type="redirect">/login.jsp</result>
         </global-results>
         <global-exception-mappings>
             <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
         </global-exception-mappings>
-
-
 
 
         <!--由spring管理Action，所以class填spring的bean的name-->
@@ -58,18 +57,19 @@
             </result>
         </action>
 
+        <!--用*号作占位符来接收参数,以便访问对应的方法-->
         <action name="UserAction_*" class="userAction" method="{1}">
             <result name="list">/jsp/linkman/list.jsp</result>
             <result name="toHome" type="dispatcher">/toIndex.htm</result>
             <result name="toRegist" type="dispatcher">/regist.jsp</result>
             <result name="toLogin" type="dispatcher">/login.jsp</result>
-            <result name="error" >/login.jsp</result>
+            <result name="error">/login.jsp</result>
         </action>
 
         <action name="SaleVisitAction_*" class="saleVisit" method="{1}">
             <result name="list">/jsp/salevisit/list.jsp</result>
             <result name="toList" type="redirectAction">SaleVisitAction_list</result>
-            <result name="add" >/jsp/salevisit/add.jsp</result>
+            <result name="add">/jsp/salevisit/add.jsp</result>
 
         </action>
 
@@ -78,8 +78,6 @@
         <action name="IndexAction" class="indexAction">
             <result>/toIndex.htm</result>
         </action>
-
-
 
 
     </package>

@@ -10,7 +10,7 @@ import org.springframework.orm.hibernate5.HibernateCallback;
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     @Override
     public User getByUserCode(String usercode) {
-//      final   String  temp =usercode;
+        final String temp = usercode;
         return getHibernateTemplate().execute(
                 new HibernateCallback<User>() {
                     @Override

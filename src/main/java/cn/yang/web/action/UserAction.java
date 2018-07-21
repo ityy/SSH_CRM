@@ -5,13 +5,16 @@ import cn.yang.service.UserService;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserAction extends ActionSupport implements ModelDriven<User> {
     private UserService userService;
     private User user = new User();
+    private final static Logger logger = LoggerFactory.getLogger(UserAction.class);
 
     public String regist() throws Exception {
-        System.out.println("UserAction:regist--正在执行");
+        logger.info("方法:regist--正在执行");
 
         //1 保存用户
         try {
@@ -38,11 +41,14 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
     /*
         --------------------  框架赋值_分割线  -----------------------------
      */
+
+    //模型驱动
     @Override
     public User getModel() {
         return user;
     }
 
+    //为spring提供set方法
     public void setUserService(UserService userService) {
         this.userService = userService;
     }

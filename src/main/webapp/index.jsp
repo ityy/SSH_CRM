@@ -14,7 +14,7 @@
 <%--<jsp:forward page="${pageContext.request.contextPath}/IndexAction"/>--%>
 
 <%
-    response.sendRedirect(request.getContextPath()+"/IndexAction");
+    response.sendRedirect(request.getContextPath() + "/IndexAction");
 %>
 
 </body>
