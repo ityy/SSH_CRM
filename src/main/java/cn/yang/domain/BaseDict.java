@@ -19,6 +19,9 @@ public class BaseDict {
     private Character dict_enable;
     private String dict_memo;
 
+    public BaseDict() {
+
+    }
 
     public String getDict_id() {
         return dict_id;
